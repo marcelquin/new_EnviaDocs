@@ -1,7 +1,6 @@
 package baseAPI.API.Sistema.Model;
 
 import baseAPI.API.Sistema.DTO.UsuarioDTO;
-import baseAPI.API.Sistema.Enum.TipoUsuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;

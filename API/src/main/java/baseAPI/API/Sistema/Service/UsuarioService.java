@@ -4,7 +4,6 @@ import baseAPI.API.Sistema.DTO.EnderecoEditDTO;
 import baseAPI.API.Sistema.DTO.UsuarioDTO;
 import baseAPI.API.Sistema.DTO.UsuarioEditDTO;
 import baseAPI.API.Sistema.Enum.SelecionarEventoBackup;
-import baseAPI.API.Sistema.Enum.TipoUsuario;
 import baseAPI.API.Sistema.Model.Backup;
 import baseAPI.API.Sistema.Model.Endereco;
 import baseAPI.API.Sistema.Model.Usuario;
