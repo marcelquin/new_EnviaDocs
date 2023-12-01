@@ -1,5 +1,6 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.OrdenServicoDTO;
 import baseAPI.API.Sistema.Enum.StatusOS;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -43,6 +44,9 @@ public class OrdemServico {
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime dataEnvio;
 
-
-
+    public OrdemServico(OrdenServicoDTO ordenServicoDTO)
+    {
+        setNome(ordenServicoDTO.nome());
+        setDescrisao(ordenServicoDTO.descrisao());
+    }
 }

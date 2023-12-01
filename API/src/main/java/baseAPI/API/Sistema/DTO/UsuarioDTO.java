@@ -1,6 +1,10 @@
 package baseAPI.API.Sistema.DTO;
 
-public record UsuarioDTO(String nome, String sobrenome, String documento,
+import lombok.Data;
+
+import java.time.LocalDate;
+
+public record UsuarioDTO(String nome, String sobrenome, String documento, LocalDate dataNascimento,
                         Long cep, String Logradouro, String numero, String Bairro,
-                         String cdade, String estado, String telefone, String Email ) {
+                         String cidade, String estado, String telefone, String Email ) {
 }

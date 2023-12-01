@@ -20,5 +20,7 @@ public class Documentos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    List<String> arquivos;
+    private List<String> arquivos;
+
+    private String arquivoDownload;
 }

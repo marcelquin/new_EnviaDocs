@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface OrdemServicoRepository extends JpaRepository<OrdemServico,Long> {
 
-    Optional<OrdemServico> findBycodigoVerificacao(String codigoVerificacao);
+    OrdemServico findBycodigoVerificacao(String codigoVerificacao);
 }

@@ -1,8 +1,11 @@
 package baseAPI.API.Sistema.Model;
 
 import baseAPI.API.Sistema.Enum.SelecionarEventoBackup;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,5 +29,8 @@ public class Backup {
     @ManyToOne
     @JoinColumn(name = "backup_ordemServico_Id")
     private OrdemServico ordemServico;
+
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime dataAcao;
 
 }

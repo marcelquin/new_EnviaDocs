@@ -1,9 +1,12 @@
 package baseAPI.API.Sistema.Model;
 
+import baseAPI.API.Sistema.DTO.UsuarioDTO;
 import baseAPI.API.Sistema.Enum.TipoUsuario;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,8 +28,9 @@ public class Usuario {
     @JoinColumn(unique = true)
     private String documento;
 
-    @Enumerated(EnumType.STRING)
-    private TipoUsuario tipoUsuario;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataNascimento;
+
 
     @OneToOne
     @JoinColumn(name = "endereco_id")
@@ -38,4 +42,14 @@ public class Usuario {
 
     @OneToMany
     private List<OrdemServico> ordemServicos;
+
+    public Usuario(UsuarioDTO usuarioDTO)
+    {
+        this.nome = usuarioDTO.nome();
+        this.sobrenome = usuarioDTO.sobrenome();
+        this.documento = usuarioDTO.documento();
+        this.dataNascimento = usuarioDTO.dataNascimento();
+        this.telefone = usuarioDTO.telefone();
+        this.email = usuarioDTO.Email();
+    }
 }
