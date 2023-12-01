@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/OrdemServico")
@@ -35,7 +36,7 @@ public class OrdemServicoController {
             @ApiResponse(responseCode = "500", description = "Ops! algo deu errado"),
     })
     @GetMapping()
-    public ResponseEntity<OrdemServico> listarUsuario() throws Exception
+    public ResponseEntity<List<OrdemServico>> listarUsuario() throws Exception
     {return ordemServicoSerice.listarUsuario();}
 
     @Operation(summary = "Busca Registro na tabela por id", method = "GET")

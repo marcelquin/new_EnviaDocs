@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/usuario")
 @RequiredArgsConstructor
@@ -31,7 +33,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "500", description = "Ops! algo deu errado"),
     })
     @GetMapping()
-    public ResponseEntity<Usuario> listarUsuario() throws Exception
+    public ResponseEntity <List<Usuario>> listarUsuario() throws Exception
     {return usuarioService.listarUsuario();}
 
     @Operation(summary = "Busca Registro na tabela por id", method = "GET")

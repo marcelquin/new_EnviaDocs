@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,13 +25,10 @@ public class OrdemServico {
 
     private  String descrisao;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_ordemservico_Id")
-    private Usuario usuario;
+    @OneToMany
+    private List<Documento> documentos;
 
-    @OneToOne
-    @JoinColumn(name = "documentos_id", referencedColumnName = "id")
-    private Documentos documentos;
+    private String arquivoDownload;
 
     @JoinColumn(unique = true)
     private  String codigoVerificacao;
@@ -46,7 +44,7 @@ public class OrdemServico {
 
     public OrdemServico(OrdenServicoDTO ordenServicoDTO)
     {
-        setNome(ordenServicoDTO.nome());
-        setDescrisao(ordenServicoDTO.descrisao());
+        this.nome = ordenServicoDTO.nome();
+        this.descrisao = ordenServicoDTO.descrisao();
     }
 }

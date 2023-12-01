@@ -16,6 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
 
 
 @Service
@@ -28,11 +31,11 @@ public class UsuarioService {
     @Autowired
     BackupRepository backupRepository;
 
-    public ResponseEntity<Usuario> listarUsuario() throws Exception
+    public ResponseEntity <List<Usuario>> listarUsuario() throws Exception
     {
         try
         {
-            return (ResponseEntity<Usuario>) usuarioRepository.findAll();
+            return new ResponseEntity<>(usuarioRepository.findAll(), OK);
         }
         catch (Exception e)
         {
@@ -47,7 +50,7 @@ public class UsuarioService {
             if(usuarioRepository.existsById(id))
             {
                 Usuario usuario = usuarioRepository.findById(id).get();
-                return new ResponseEntity<>(usuario, HttpStatus.OK);
+                return new ResponseEntity<>(usuario, OK);
             }
 
         }
@@ -105,7 +108,7 @@ public class UsuarioService {
                 backup.setUsuario(usuario);
                 backup.setDataAcao(LocalDateTime.now());
                 backupRepository.save(backup);
-               return new ResponseEntity<>(HttpStatus.OK);
+               return new ResponseEntity<>(OK);
            }
            else
            {
@@ -140,7 +143,7 @@ public class UsuarioService {
                     backup.setUsuario(usuario);
                     backup.setDataAcao(LocalDateTime.now());
                     backupRepository.save(backup);
-                    return new ResponseEntity<>(HttpStatus.OK);
+                    return new ResponseEntity<>(OK);
                 }
 
 
@@ -166,7 +169,7 @@ public class UsuarioService {
             {
                 usuarioRepository.deleteById(id);
             }
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(OK);
         }
         catch (Exception e)
         {

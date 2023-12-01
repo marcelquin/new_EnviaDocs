@@ -14,13 +14,13 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @Builder
 @Entity
-public class Documentos {
+public class Documento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private List<String> arquivos;
+    private String arquivo;
 
-    private String arquivoDownload;
+
 }

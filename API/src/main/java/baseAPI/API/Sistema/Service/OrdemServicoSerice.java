@@ -4,11 +4,11 @@ import baseAPI.API.Sistema.DTO.OrdenServicoDTO;
 import baseAPI.API.Sistema.Enum.SelecionarEventoBackup;
 import baseAPI.API.Sistema.Enum.StatusOS;
 import baseAPI.API.Sistema.Model.Backup;
-import baseAPI.API.Sistema.Model.Documentos;
+import baseAPI.API.Sistema.Model.Documento;
 import baseAPI.API.Sistema.Model.OrdemServico;
 import baseAPI.API.Sistema.Model.Usuario;
 import baseAPI.API.Sistema.Repository.BackupRepository;
-import baseAPI.API.Sistema.Repository.DocumentosRepository;
+import baseAPI.API.Sistema.Repository.DocumentoRepository;
 import baseAPI.API.Sistema.Repository.OrdemServicoRepository;
 import baseAPI.API.Sistema.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,17 +46,17 @@ public class OrdemServicoSerice {
     @Autowired
     OrdemServicoRepository ordemServicoRepository;
     @Autowired
-    DocumentosRepository documentosRepository;
+    DocumentoRepository documentoRepository;
     @Autowired
     BackupRepository backupRepository;
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    public ResponseEntity<OrdemServico> listarUsuario() throws Exception
+    public ResponseEntity<List<OrdemServico>> listarUsuario() throws Exception
     {
         try
         {
-            return (ResponseEntity<OrdemServico>) ordemServicoRepository.findAll();
+            return new ResponseEntity<>(ordemServicoRepository.findAll(), OK);
         }
         catch (Exception e)
         {
@@ -90,16 +90,12 @@ public class OrdemServicoSerice {
                 Usuario usuario = usuarioRepository.findById(idUsuario).get();
                 if(ordenServicoDTO != null)
                 {
-                    OrdemServico ordemServico = new OrdemServico(ordenServicoDTO);
-                    Documentos documentos = new Documentos();
-                    documentosRepository.save(documentos);
                     Backup backup = new Backup();
+                    OrdemServico ordemServico = new OrdemServico(ordenServicoDTO);
                     ordemServico.setDataCriacao(LocalDateTime.now());
                     int cod = (int) (10000001 + Math.random() * 89999999);
                     String codigo = "OS_"+cod;
                     ordemServico.setCodigoVerificacao(codigo);
-                    ordemServico.setUsuario(Usuario.builder().build());
-                    ordemServico.setDocumentos(documentos);
                     ordemServico.setStatusOS(StatusOS.AGUARDANDO_RECEBIMENTO);
                     ordemServicoRepository.save(ordemServico);
                     usuario.getOrdemServicos().add(ordemServico);
@@ -133,20 +129,21 @@ public class OrdemServicoSerice {
                 OrdemServico ordemServico = ordemServicoRepository.findBycodigoVerificacao(coditoOS);
                 if(ordemServico != null)
                 {
-                    Documentos documentos = documentosRepository.findById(ordemServico.getDocumentos().getId()).get();
                     Backup backup = new Backup();
-                    List<String> arquivos = new ArrayList<>();
+                    List<Documento> documentos = new ArrayList<>();
                     boolean pasta = new File(caminhoImagem + "\\"+ordemServico.getCodigoVerificacao()).mkdir();
-
+                    int dig = (int) (101 + Math.random() * 999);
                     for(MultipartFile file : files)
                     {
                         byte[] bytes = file.getBytes();
-                        Path caminho = get(caminhoImagem+ordemServico.getCodigoVerificacao()+"\\"+file.getOriginalFilename());
+                        Path caminho = get(caminhoImagem+ordemServico.getCodigoVerificacao()+"\\"+dig+"_"+file.getOriginalFilename());
                         Files.write(caminho, bytes);
-                        arquivos.add(file.getOriginalFilename());
+                        Documento documento = new Documento();
+                        documento.setArquivo(dig+"_"+file.getOriginalFilename());
+                        documentoRepository.save(documento);
+                        documentos.add(documento);
                     }
-                    documentos.setArquivos(arquivos);
-                    documentosRepository.save(documentos);
+                    ordemServico.getDocumentos().addAll(documentos);
                     ordemServico.setDataEnvio(LocalDateTime.now());
                     ordemServico.setStatusOS(StatusOS.RECEBIDO);
                     ordemServicoRepository.save(ordemServico);
@@ -177,11 +174,10 @@ public class OrdemServicoSerice {
             OrdemServico ordemServico = ordemServicoRepository.findBycodigoVerificacao(codigo);
             if(ordemServico != null)
             {
-                Documentos documentos = documentosRepository.findById(ordemServico.getDocumentos().getId()).get();
                 String sourceFile = caminhoImagem + codigo + "\\";
                 FileOutputStream fos = new FileOutputStream(caminhoImagemzip +codigo+".zip");
-                documentos.setArquivoDownload(codigo+".zip");
-                documentosRepository.save(documentos);
+                ordemServico.setArquivoDownload(codigo+".zip");
+                ordemServicoRepository.save(ordemServico);
                 ZipOutputStream zipOut = new ZipOutputStream(fos);
                 File fileToZip = new File(sourceFile);
                 String fileName = fileToZip.getName();
@@ -207,7 +203,7 @@ public class OrdemServicoSerice {
                 OrdemServico ordemServico = ordemServicoRepository.findBycodigoVerificacao(codigo);
                 if(ordemServico != null)
                 {
-                    String filename = ordemServico.getDocumentos().getArquivoDownload();
+                    String filename = ordemServico.getArquivoDownload();
                     Path filePath = get(caminhoImagemzip).toAbsolutePath().normalize().resolve(filename);
                     if (!Files.exists(filePath)) {
                         throw new FileNotFoundException(filename + " was not found on the server");
@@ -243,12 +239,6 @@ public class OrdemServicoSerice {
         try{
             if(ordemServicoRepository.existsById(idOrdem))
             {
-                OrdemServico ordemServico = ordemServicoRepository.findById(idOrdem).get();
-                for(String fileName : ordemServico.getDocumentos().getArquivos())
-                {
-                    removeArquivo(fileName);
-                }
-                removeArquivo(ordemServico.getDocumentos().getArquivoDownload());
                 ordemServicoRepository.deleteById(idOrdem);
                 return new ResponseEntity<>(OK);
             }
