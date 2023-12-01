@@ -1,0 +1,10 @@
+package baseAPI.API.Sistema.Enum;
+
+public enum SelecionarEventoBackup {
+    USUARIO_CRIADO,
+    ADMINISTRADOR_CRIADO,
+    USUARIO_EDITADO,
+    ADMINISTRADOR_EDITADO,
+    ORDEM_SERVICO_CRIADA,
+    DOCUMENTOS_ENVIADOS;
+}

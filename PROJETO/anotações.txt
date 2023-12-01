@@ -1,0 +1,61 @@
+NEW ENVIA DOCS
+
+ENUM
+{
+TABELA
+(
+	Tipo_Usuario(USUARIO, ADMINISTRADOR)
+	Status_OS(AGUARDANDO, RECEBIDO)
+	SelecionarEventoBackup(USUARIO_CRIADO, ADMINISTRADOR_CRIADO, USUARIO_EDITADO, ADMINISTRADOR_EDITADO
+		   ORDEM_SERVICO_CRIADA, DOCUMENTOS_ENVIADOS)
+)
+}
+
+USUARIO
+{
+TABELA
+( Id, nome, sobrenome, cpf/cnpj, dataNascimento, telefone, email)
+RELACIONAMENTOS
+( 1-1 ENDERECO, 1-n ORDEM_SERVICO, enum Tipo_Usuario)
+METODOS
+(cpf, telefone, email - unico)
+}
+ENDERECO
+{
+TABELA
+(id, Cep, Logradouro, numero, bairro, cidade, estado)
+RELACIONAMENTOS
+()
+METODOS
+()
+}
+
+ORDEM_SERVICO
+{
+TABELA
+( Id, nome, descrisao, dataCriacao, codigoVerificacao)
+RELACIONAMENTOS
+(n-1 CLIENTE, 1-n DOCUMENTOS, enum Status_OS)
+METODOS
+(findBycodigoVerificacao)
+}
+
+DOCUMENTOS
+{
+TABELA
+(id, <string>arquivos)
+RELACIONAMENTOS
+()
+METODOS
+()
+}
+
+BACKUP
+{
+TABELA
+(id, dataAcao)
+RELACIONAMENTOS
+(n-1 USUARIO, n-1 ORDEM_SERVICO, enum SelecionarEventoBackup)
+METODOS
+()
+}
